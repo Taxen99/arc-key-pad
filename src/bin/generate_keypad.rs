@@ -166,7 +166,9 @@ fn generate_keypad_css(config: &Config) -> String {
     for (row, x) in config.theme.pattern.iter().enumerate() {
         for (col, i) in x.chars().enumerate() {
             let p = row * 3 + col + 1;
-            let content = &colors[i.to_digit(10).unwrap() as usize];
+            let content = &colors
+                .get(i.to_digit(10).expect("malformed pattern in theme") as usize)
+                .expect("malformed pattern in themes");
             css.push_str(&format!(
                 r##".bt:nth-child({p}) {{
     {content};
@@ -229,11 +231,12 @@ fn main() {
         depth: pwd.len(),
         theme,
     };
+    fs::create_dir_all("output").expect("could not create output directory");
     let html = generate_keypad_html(&config);
     let html = HTML_TEMPLATE.replace("@@@", &html);
-    fs::write("res/index.html", html).unwrap();
+    fs::write("output/index.html", html).expect("could not write file");
     let css = generate_keypad_css(&config);
     let css = CSS_TEMPLATE.replace("@@@", &css);
     let css = css.replace("***", &pwd);
-    fs::write("res/style.css", css).unwrap();
+    fs::write("output/style.css", css).expect("could not write file");
 }
