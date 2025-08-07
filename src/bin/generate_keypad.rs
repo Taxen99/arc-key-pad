@@ -12,92 +12,42 @@ const HTML_EPILOGUE: &str = r##"
 </div>
 "##;
 
-// fn emit_kp_div(config: &Config, buf: &mut String, layers: &mut String) {
-//     buf.push_str(&format!(r#"<div class="kp kp_{}">"#, layers));
-//     for i in 1..=9 {
-//         // <a href="#c1" class="bt">1</a>
-//         layers.push((b'0' + i as u8) as char);
-//         buf.push_str(&format!(
-//             r##"<a href="#c{}" class="bt" name="c{}" id="c{}">{}</a>"##,
-//             layers, layers, layers, i
-//         ));
-//         layers.pop();
-//     }
-//     for i in 1..=9 {
-//         layers.push((b'0' + i as u8) as char);
-//         emit_keypad_layer(config, buf, layers);
-//         layers.pop();
-//     }
-
-//     buf.push_str("</div>");
-// }
-
 fn emit_keypad_layer_html(config: &Config, buf: &mut String, layers: &mut String) {
     if layers.len() == config.depth {
         return;
     }
-    // buf.push_str("<div>");
-    // for i in 1..=9 {
-    //     // <a href="#c1" class="bt">1</a>
-    //     layers.push((b'0' + i as u8) as char);
-    //     buf.push_str(&format!(
-    //         r##"<a class="inva" name="c{}" id="c{}"></a>"##,
-    //         layers, layers
-    //     ));
-    //     layers.pop();
-    // }
     buf.push_str(&format!(r#"<p class="kp kp_{}">"#, layers));
     for i in 1..=9 {
-        // <a href="#c1" class="bt">1</a>
         layers.push((b'0' + i as u8) as char);
-        buf.push_str(&format!(
-            // r##"<a href="#c{}" class="bt" name="c{}" id="c{}">{}</a>"##,
-            r##"<a class="bt" href="#c{}"></a>"##,
-            layers
-        ));
+        buf.push_str(&format!(r##"<a class="bt" href="#c{}"></a>"##, layers));
         layers.pop();
     }
     buf.push_str("</p>");
     for i in 1..=9 {
         layers.push((b'0' + i as u8) as char);
+        emit_keypad_layer_anchor_html(config, buf, layers);
         emit_keypad_layer_html(config, buf, layers);
         layers.pop();
     }
-
-    // buf.push_str("</div>");
 }
 fn emit_keypad_layer_anchor_html(config: &Config, buf: &mut String, layers: &mut String) {
-    if layers.len() == config.depth {
-        return;
+    if layers.len() > config.depth {
+        panic!("uwu");
     }
-    let class = if layers.len() == config.depth - 1 {
+    let class = if layers.len() == config.depth {
         "kpfin"
     } else {
         "kpnfin"
     };
-    for i in 1..=9 {
-        layers.push((b'0' + i as u8) as char);
-        buf.push_str(&format!(
-            r##"<a class="inva {}" name="c{}" id="c{}"></a>"##,
-            class, layers, layers
-        ));
-        layers.pop();
-    }
-    for i in 1..=9 {
-        layers.push((b'0' + i as u8) as char);
-        emit_keypad_layer_anchor_html(config, buf, layers);
-        layers.pop();
-    }
-
-    // buf.push_str("</div>");
+    buf.push_str(&format!(
+        r##"<p class="invap"><a class="inva {}" name="c{}" id="c{}"></a></p>"##,
+        class, layers, layers
+    ));
 }
 
 fn generate_keypad_html(config: &Config) -> String {
     let mut html = String::new();
     html.push_str(HTML_PRELUDE);
-    html.push_str(r##"<p class="kplincon">"##);
-    emit_keypad_layer_anchor_html(config, &mut html, &mut String::new());
-    html.push_str("</p>");
     emit_keypad_layer_html(config, &mut html, &mut String::new());
     html.push_str(HTML_EPILOGUE);
     html
@@ -169,7 +119,10 @@ const CSS_PRELUDE: &str = r##"
 }
 
 .inva {
-display:none;
+    display:none;
+}
+.invap {
+    display:none;
 }
 .kp {
     display: none;
@@ -177,49 +130,16 @@ display:none;
 .kpmcon:not(:has(a.kpnfin:target)) .kp_ {
     display: grid;
 }
-"##;
 
-fn emit_keypad_layer_css(config: &Config, buf: &mut String, layers: &mut String) {
-    if layers.len() == config.depth {
-        return;
-    }
-
-    /*
-        .kp {
-        display: none;
-        }
-       #cx:target ~ .kp_x {
-         display: grid;
-       }
-    */
-
-    // buf.push_str(&format!(r#"<div class="kp kp_{}">"#, layers));
-    for i in 1..=9 {
-        // <a href="#c1" class="bt">1</a>
-        layers.push((b'0' + i as u8) as char);
-        buf.push_str(&format!(
-            r##"
-.kplincon:has(#c{}:target) ~ .kp_{}{{
-display: grid;
-}}
-"##,
-            layers, layers
-        ));
-        layers.pop();
-    }
-    for i in 1..=9 {
-        layers.push((b'0' + i as u8) as char);
-        emit_keypad_layer_css(config, buf, layers);
-        layers.pop();
-    }
-
-    // buf.push_str("</div>");
+.invap:has(.inva:target) + .kp {
+    display: grid;
 }
 
-fn generate_keypad_css(config: &Config) -> String {
+"##;
+
+fn generate_keypad_css(_config: &Config) -> String {
     let mut css = String::new();
-    css.push_str(&CSS_PRELUDE);
-    emit_keypad_layer_css(config, &mut css, &mut String::new());
+    css.push_str(CSS_PRELUDE);
     css
 }
 
