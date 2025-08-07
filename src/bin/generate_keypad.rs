@@ -1,7 +1,20 @@
-use std::{env, fs};
+use std::{collections::HashMap, env, fs};
+
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct Theme {
+    border: String,
+    colors: Vec<String>,
+    pattern: [String; 3],
+}
+
+#[derive(Deserialize)]
+struct Themes(HashMap<String, Theme>);
 
 struct Config {
     depth: usize,
+    theme: Theme,
 }
 
 const HTML_PRELUDE: &str = r##"
@@ -60,7 +73,6 @@ const CSS_PRELUDE: &str = r##"
 }
 
 .bt {
-    border: 5px ridge white;
     width: 1.2em;
     height: 1.2em;
     font-size: xx-large;
@@ -74,6 +86,7 @@ const CSS_PRELUDE: &str = r##"
     text-decoration: none;
     font-family: 'Courier New', Courier, monospace;
     font-weight: 900;
+    color: black;
 }
 
 .bt:nth-child(1)::before {
@@ -104,18 +117,11 @@ const CSS_PRELUDE: &str = r##"
     content: "9";
 }
 
-.bt:nth-child(even) {
-    color: pink;
-}
-.bt:nth-child(odd) {
-    color: #89cff0;
-}
-
 .bt:hover {
-    filter: brightness(95%);
+    filter: brightness(97%);
 }
 .bt:focus {
-    filter: brightness(70%);
+    filter: brightness(85%);
 }
 
 .inva {
@@ -137,9 +143,38 @@ const CSS_PRELUDE: &str = r##"
 
 "##;
 
-fn generate_keypad_css(_config: &Config) -> String {
+fn generate_keypad_css(config: &Config) -> String {
     let mut css = String::new();
     css.push_str(CSS_PRELUDE);
+    let border = if config.theme.border.is_empty() {
+        "1px solid black"
+    } else {
+        &config.theme.border
+    };
+    css.push_str(&format!(
+        r##".bt {{
+    border: {border};
+}}
+"##
+    ));
+    let colors = config
+        .theme
+        .colors
+        .iter()
+        .map(|x| x.replace(";", ";\n").trim().to_owned())
+        .collect::<Vec<_>>();
+    for (row, x) in config.theme.pattern.iter().enumerate() {
+        for (col, i) in x.chars().enumerate() {
+            let p = row * 3 + col + 1;
+            let content = &colors[i.to_digit(10).unwrap() as usize];
+            css.push_str(&format!(
+                r##".bt:nth-child({p}) {{
+    {content};
+}}
+"##
+            ));
+        }
+    }
     css
 }
 
@@ -181,8 +216,19 @@ fn main() {
     if pwd.len() > 3 {
         println!("\x1b[0;33m[WARNING] a four digit passcode will not fit on ao3\x1b[0m");
     }
+    let theme = args.get(2).map(|x| x.as_str()).unwrap_or("default");
 
-    let config = Config { depth: pwd.len() };
+    let themes = fs::read_to_string("themes.toml").expect("provide themes.toml");
+    let mut themes: Themes = toml::from_str(&themes).expect("invalid themes format");
+    let theme = themes
+        .0
+        .remove(theme)
+        .expect(&format!("'{}' is not a valid theme", theme));
+
+    let config = Config {
+        depth: pwd.len(),
+        theme,
+    };
     let html = generate_keypad_html(&config);
     let html = HTML_TEMPLATE.replace("@@@", &html);
     fs::write("res/index.html", html).unwrap();

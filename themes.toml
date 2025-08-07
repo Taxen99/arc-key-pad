@@ -1,0 +1,101 @@
+[default]
+border = "1px solid black"
+colors = [
+	"",
+]
+pattern = [
+	"000",
+	"000",
+	"000",
+]
+
+[trans]
+border = "5px ridge white"
+colors = [
+	"color: pink",
+	"color: #89cff0",
+]
+pattern = [
+	"101",
+	"010",
+	"101",
+]
+
+[enby]
+border = "2px ridge black"
+colors = [
+	"color: #2C2C2C; background-color: #FCF434",
+	"color: white; background-color: #9C59D1",
+	"color: white; background-color: #2C2C2C",
+]
+pattern = [
+	"000",
+	"111",
+	"222",
+]
+
+[pride]
+border = "2px ridge black"
+colors = [
+	"background-color: red; color: black",
+	"background-color: orange; color: black",
+	"background-color: yellow; color: black",
+	"background-color: green; color: white",
+	"background-color: blue; color: white",
+	"background-color: purple; color: white",
+	"background-color: white; color: black",
+	"background-color: pink; color: black",
+	"background-color: #89cff0; color: black",
+]
+pattern = [
+	"012",
+	"345",
+	"678",
+]
+
+[inter]
+border = "2px ridge black"
+colors = [
+	"background-color: #FFD800; color: black",
+	"background-color: #FFD800; color: #7902AA",
+	"background-color: #7902AA; color: #FFD800",
+]
+pattern = [
+	"010",
+	"121",
+	"010",
+]
+
+[bi]
+border = "2px ridge black"
+colors = [
+	"background-color: #D60270; color: cornsilk",
+	"background-color: #9B4F96; color: cornsilk",
+	"background-color: #0038A8; color: cornsilk",
+]
+pattern = [
+	"000",
+	"111",
+	"222",
+]
+
+[lesbian]
+border = "2px ridge black"
+colors = [
+	"background-color: #D52D00; color: cornsilk",
+	"background-color: #EF7627; color: cornsilk",
+	"background-color: #FF9A56; color: cornsilk",
+
+	"background-color: #D162A4; color: cornsilk",
+	"background-color: #B55690; color: cornsilk",
+	"background-color: #A30262; color: cornsilk",
+
+	"background-color: white; color: #D52D00",
+	"background-color: white; color: black",
+	"background-color: white; color: #A30262",
+]
+pattern = [
+	"012",
+	"678",
+	"345",
+]
