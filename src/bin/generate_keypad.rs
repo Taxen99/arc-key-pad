@@ -178,6 +178,9 @@ fn main() {
     }
     assert!(pwd.len() > 1, "please use more than 1 digit");
     assert!(pwd.len() <= 4, "please do not use more than 4 digits");
+    if pwd.len() > 3 {
+        println!("\x1b[0;33m[WARNING] a four digit passcode will not fit on ao3\x1b[0m");
+    }
 
     let config = Config { depth: pwd.len() };
     let html = generate_keypad_html(&config);
