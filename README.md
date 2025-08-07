@@ -1,6 +1,8 @@
 # what is this?
 A tool for generating a pure html/css keypad compatible with https://archiveofourown.org/ that hides content from the user until they enter a certain passcode.
 
+![A gif showing to keypad in action](demo.gif)
+
 # why is this?
 Fun.
 
