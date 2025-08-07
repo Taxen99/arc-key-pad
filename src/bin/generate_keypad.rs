@@ -1,4 +1,4 @@
-use std::fs;
+use std::{env, fs};
 
 struct Config {
     depth: usize,
@@ -235,21 +235,36 @@ const CSS_TEMPLATE: &str = r##"
 .secret {
     display: none;
 }
-.kpmcon:has(#c421:target) ~ .secret {
+.kpmcon:has(#c***:target) ~ .secret {
     display: block;
 }
-.kpmcon:not(:has(#c421:target)):has(.kpfin:target)::after {
+.kpmcon:not(:has(#c***:target)):has(.kpfin:target)::after {
     content: "Incorrect Passcode";
     color: red;
 }
 "##;
 
 fn main() {
-    let config = Config { depth: 3 };
+    let args = env::args().collect::<Vec<_>>();
+    let pwd = args.get(1).expect("please provide passcode");
+    for c in pwd.chars() {
+        match c {
+            '1'..='9' => (),
+            _ => panic!(
+                "'{}' is not a valid passcode. please use only numbers 1-9",
+                pwd
+            ),
+        }
+    }
+    assert!(pwd.len() > 1, "please use more than 1 digit");
+    assert!(pwd.len() <= 4, "please do not use more than 4 digits");
+
+    let config = Config { depth: pwd.len() };
     let html = generate_keypad_html(&config);
     let html = HTML_TEMPLATE.replace("@@@", &html);
     fs::write("res/index.html", html).unwrap();
     let css = generate_keypad_css(&config);
     let css = CSS_TEMPLATE.replace("@@@", &css);
+    let css = css.replace("***", &pwd);
     fs::write("res/style.css", css).unwrap();
 }
