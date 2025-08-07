@@ -13,3 +13,5 @@ The `generate_keypad` crate takes two parameters:
 
 # contribute is this?
 Open a pull request or issue if you want to. And if github decides to send me an email I'll look at it.
+
+Note that any themes that aren't pride flags will not be accepted. This is to uphold the integrity of the functionality of the quantum quantum quantum. Please understand.
