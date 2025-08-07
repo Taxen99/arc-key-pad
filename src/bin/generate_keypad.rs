@@ -52,8 +52,8 @@ fn emit_keypad_layer_html(config: &Config, buf: &mut String, layers: &mut String
         layers.push((b'0' + i as u8) as char);
         buf.push_str(&format!(
             // r##"<a href="#c{}" class="bt" name="c{}" id="c{}">{}</a>"##,
-            r##"<a class="bt" href="#c{}">{}</a>"##,
-            layers, i
+            r##"<a class="bt" href="#c{}"></a>"##,
+            layers
         ));
         layers.pop();
     }
@@ -105,39 +105,67 @@ fn generate_keypad_html(config: &Config) -> String {
 
 const CSS_PRELUDE: &str = r##"
 .kp {
-	display: grid;
-	grid-template-columns: min-content min-content min-content;
+    display: grid;
+    grid-template-columns: min-content min-content min-content;
 }
 
 .bt {
-	border: 5px ridge white;
-	width: 1.2em;
-	height: 1.2em;
-	font-size: xx-large;
-	padding: 10px;
-	margin: 3px;
-	display: inline-block;
-	background-color: white;
+    border: 5px ridge white;
+    width: 1.2em;
+    height: 1.2em;
+    font-size: xx-large;
+    padding: 10px;
+    margin: 3px;
+    display: inline-block;
+    background-color: white;
     display: flex;
-	justify-content: center;
-	align-items: center;
-	text-decoration: none;
-	font-family: 'Courier New', Courier, monospace;
-	font-weight: 900;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 900;
+}
+
+.bt:nth-child(1)::before {
+    content: "1";
+}
+.bt:nth-child(2)::before {
+    content: "2";
+}
+.bt:nth-child(3)::before {
+    content: "3";
+}
+.bt:nth-child(4)::before {
+    content: "4";
+}
+.bt:nth-child(5)::before {
+    content: "5";
+}
+.bt:nth-child(6)::before {
+    content: "6";
+}
+.bt:nth-child(7)::before {
+    content: "7";
+}
+.bt:nth-child(8)::before {
+    content: "8";
+}
+.bt:nth-child(9)::before {
+    content: "9";
 }
 
 .bt:nth-child(even) {
-	color: pink;
+    color: pink;
 }
 .bt:nth-child(odd) {
-	color: #89cff0;
+    color: #89cff0;
 }
 
 .bt:hover {
-	filter: brightness(95%);
+    filter: brightness(95%);
 }
 .bt:focus {
-	filter: brightness(70%);
+    filter: brightness(70%);
 }
 
 .inva {
