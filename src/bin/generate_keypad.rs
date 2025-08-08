@@ -18,8 +18,8 @@ struct Config {
 }
 
 const HTML_PRELUDE: &str = r##"
-<a href="#r_">reset</a>
 <div class="kpmcon">
+<a href="#r_">reset</a>
 "##;
 const HTML_EPILOGUE: &str = r##"
 </div>
@@ -140,7 +140,10 @@ const CSS_PRELUDE: &str = r##"
 .invap:has(.inva:target) + .kp {
     display: grid;
 }
-
+.kpmcon:not(:has(#c***:target)):has(.kpfin:target)::after {
+    content: "Incorrect Passcode";
+    color: red;
+}
 "##;
 
 fn generate_keypad_css(config: &Config) -> String {
@@ -182,22 +185,37 @@ fn generate_keypad_css(config: &Config) -> String {
 
 const HTML_TEMPLATE: &str = r##"<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Document</title><link rel="stylesheet" href="style.css"></head><body>
 @@@
-<div class="secret">
+<details class="secret">
+<summary></summary>
 <h1>my secret header</h1>
-</div>
+</details>
 </body></html>"##;
 
 const CSS_TEMPLATE: &str = r##"
 @@@
 .secret {
-    display: none;
+	display: none;
 }
-.kpmcon:has(#c***:target) ~ .secret {
-    display: block;
+.kpmcon:has(#c124:target)~.secret {
+	display: block;
 }
-.kpmcon:not(:has(#c***:target)):has(.kpfin:target)::after {
-    content: "Incorrect Passcode";
-    color: red;
+.secret[open] {
+	display: block;
+}
+.secret summary::marker {
+	content: "🔑 click to open";
+}
+.secret summary:hover {
+	color: green;
+}
+.secret[open] summary::marker {
+	content: "🔑 click to close";
+}
+.secret[open] summary:hover {
+	color: red;
+}
+.kpmcon:has(~.secret[open]) {
+	display: none;
 }
 "##;
 
