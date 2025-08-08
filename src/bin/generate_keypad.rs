@@ -196,7 +196,7 @@ const CSS_TEMPLATE: &str = r##"
 .secret {
     display: none;
 }
-.kpmcon:has(#c124:target)~.secret {
+.kpmcon:has(#c***:target)~.secret {
     display: block;
 }
 .secret[open] {
