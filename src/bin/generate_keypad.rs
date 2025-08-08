@@ -194,28 +194,32 @@ const HTML_TEMPLATE: &str = r##"<!DOCTYPE html><html lang="en"><head><meta chars
 const CSS_TEMPLATE: &str = r##"
 @@@
 .secret {
-	display: none;
+    display: none;
 }
 .kpmcon:has(#c124:target)~.secret {
-	display: block;
+    display: block;
 }
 .secret[open] {
-	display: block;
+    display: block;
 }
-.secret summary::marker {
-	content: "🔑 click to open";
+.secret summary::after {
+    content: "🔑 click to open";
 }
 .secret summary:hover {
-	color: green;
+    color: green;
 }
-.secret[open] summary::marker {
-	content: "🔑 click to close";
+.secret[open] summary::after {
+    content: "🔑 click to close";
 }
 .secret[open] summary:hover {
-	color: red;
+    color: red;
 }
 .kpmcon:has(~.secret[open]) {
-	display: none;
+    display: none;
+}
+details summary::-webkit-details-marker, details summary::marker {
+    display: none;
+    content: "";
 }
 "##;
 
