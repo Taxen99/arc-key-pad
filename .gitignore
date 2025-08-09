@@ -3,3 +3,5 @@ output
 .DS_Store
 *.gif
 !demo.gif
+.cargo
+config.toml

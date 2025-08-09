@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+<style>
+	input:invalid {
+		background-color: red;
+	}
+	input:valid {
+		background-color: greenyellow;
+	}
+	#error {
+		color: red;
+	}
+	textarea {
+		width: 400px;
+		height: 400px;
+	}
+	.outflex {
+		display: flex;
+	}
+</style>
+
+	<script type="module" src="index.js"></script>
+	<h1>ao3 keypad generator</h1>
+	<p>pick a theme. pick a 2 or 3 digit passcode using numbers 1-9. generate. copy html into a work and replace <code>&lt;h1&gt;my secret header&lt;/h1&gt;</code> with your own content. copy css into a workskin and apply it to your work. profit.</p>
+	<label for="themes">Theme</label>
+	<select id="themes"></select>
+	<label for="passcode">Passcode</label>
+	<input id="passcode" type="text" maxlength="3" minlength="2" required>
+	<button id="generate">Generate</button>
+	<p id="error"></p>
+
+	<div class="outflex">
+		<div>
+			<textarea readonly id="htmlout"></textarea>
+			<br />
+			<button id="htmlcopy">copy html</button>
+		</div>
+		<div>
+			<textarea readonly id="cssout"></textarea>
+			<br />
+			<button id="csscopy">copy css</button>
+		</div>
+	</div>
+</body>
+</html>

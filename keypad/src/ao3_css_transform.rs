@@ -1,5 +1,3 @@
-use std::{env, fs::read_to_string};
-
 use regex::Regex;
 
 enum State {
@@ -13,12 +11,11 @@ struct Decl {
     decl: String,
 }
 
-fn main() {
-    let args = env::args().collect::<Vec<_>>();
-    let path = args.get(1).expect("provide path to css file");
-    let css = read_to_string(path).unwrap();
+// TODO: buggy. fix
+pub fn ao3_css_transform(css: &str) -> String {
     let comment_regex = Regex::new(r"(?s)/\*.*?\*/").unwrap();
     let css = comment_regex.replace_all(&css, "");
+    let css = css.replace(";", "\n");
     let lines = css.lines();
     let mut state = State::Outside;
     let mut decls = Vec::new();
@@ -63,5 +60,6 @@ fn main() {
     for decl in decls {
         output.push_str(&format!("{} {{\n    {}\n}}\n", decl.sel, decl.decl));
     }
-    std::println!("{}", output);
+    output = output.trim().to_owned();
+    output
 }
