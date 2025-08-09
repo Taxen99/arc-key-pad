@@ -24,3 +24,6 @@ Note that any themes that aren't pride flags will not be accepted. This is to up
 
 # safe is this?
 Please do not run this code (or any other code, especially obscure code) without having read through it first. It's not much to vet, and doing so *will* save you from having your precious ao3 account and bitcoin wallets stolen some day.
+
+# wasm is this?
+If you, for obvious reasons, don't want to run untrusted rust code on your computer, there is also an ugly wasm-powered interface available at https://taxen99.github.io/arc-key-pad that you can use instead. It is still recommended that you look through the generated html/css to ensure that I haven't snuck in some ip-grabber (is that a thing on ao3) or whatnot, but it ought to be pretty safe.
